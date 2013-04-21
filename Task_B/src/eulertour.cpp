@@ -45,23 +45,25 @@ int main() {
 	return 0;
 }
 
+/* 2) complete the funciton so it prints a small overview of the graph
+ *    Example:
+ *
+ *    Edges Node 0
+ *    0---1
+ *
+ *    Edges Node 1
+ *    1---3
+ */
 void print_graph(graph* newGraph) {
-	/*TODO 2)
-	 *
-	 * complete the funciton so it prints a small overview of the graph
-	 *
-	 * Example:
-	 *
-	 * Edges Node 0
-	 * 0---1
-	 *
-	 * Edges Node 1
-	 * 1---3
-	 *
-	 *
-	 *
-	 * write your implementation here
-	 */
+	std::vector<node*>::const_iterator it_node;
+	std::vector<edge*>::const_iterator it_edge;
+	for (unsigned i = 0; i < newGraph->get_nodes().size(); i++) {
+		std::cout << "Edges Node " << newGraph->get_nodes().at(i)->get_id() << std::endl;
+		for (unsigned j = 0; j < newGraph->get_nodes().at(i)->get_edges().size(); j++) {
+			std::cout << newGraph->get_nodes().at(i)->get_edges().at(j)->node1->get_id() << "---" << newGraph->get_nodes().at(i)->get_edges().at(j)->node2->get_id() << std::endl;
+		}
+		std::cout << std::endl;
+	}
 }
 
 void createCircle(graph* myGraph) {
@@ -86,13 +88,25 @@ void createCircle(graph* myGraph) {
 	myGraph->get_nodes().at(4)->add_edge(temp1);
 }
 
+/*
+ * 3) complete the function so it returns 1 if the given graph has an eulerpath and -1 if it hasn't.
+ */
 int eulertour(graph* eulergraph) {
-	/*TODO 3)
-	 *
-	 * complete the function so it returns 1 if the given graph has an eulerpath and -1 if it hasn't.
-	 *
-	 * write your implementation here
-	 */
+	std::vector<int> edgeCount(eulergraph->get_nodes().size(), 0);
+	for (unsigned i = 0; i < eulergraph->get_nodes().size(); i++) {
+		for (unsigned j = 0; j < eulergraph->get_nodes().at(i)->get_edges().size(); j++) {
+			edgeCount[eulergraph->get_nodes().at(i)->get_edges().at(j)->node1->get_id()]++;
+			edgeCount[eulergraph->get_nodes().at(i)->get_edges().at(j)->node2->get_id()]++;
+		}
+	}
+	int oddCount = 0;
+	for (unsigned k = 0; k < edgeCount.size(); k++) {
+		if (edgeCount[k] % 2 != 0)
+			oddCount++;
+	}
 
-	return 1;
+	if (oddCount > 2)
+		return -1;
+	else
+		return 1;
 }

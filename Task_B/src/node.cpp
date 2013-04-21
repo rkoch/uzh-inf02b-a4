@@ -21,13 +21,14 @@ vector<edge*> node::get_edges() {
 	return _edges;
 }
 
+/*
+ * 1) add a new edge between this node and newNode
+ */
 void node::add_edge(node* newNode) {
-	/*TODO 1)
-	 *
-	 * add a new edge between this node and newNode
-	 *
-	 * write your implementation here
-	 */
+	edge* e = new edge();
+	e->node1 = this;
+	e->node2 = newNode;
+	_edges.push_back(e);
 
 }
 
