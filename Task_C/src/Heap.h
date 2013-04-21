@@ -26,7 +26,6 @@ class MyHeap {
 
 public:
 	typedef pair<Key, Element> Node;
-	typedef Node* NodePtr;
 
 	MyHeap(int capac = 100);          // constructor
 	~MyHeap();						// destructor
@@ -41,13 +40,21 @@ public:
 	void removeMin() throw (EmptyContainerException);				// remove minimum
 
 private:
-	int count;
 	int capacity;
-	NodePtr* nodes;
+	vector<Node*> heap;
 
 	bool isStorageFull();
-	void increaseStorage();
-	void balanceHeap();
+	void printHeap();
+
+	void swap(int idx1, int indx2);
+
+	unsigned parent(int childIdx);
+	unsigned left(int parentIdx);
+	unsigned right(int parentIdx);
+
+	void heapify(int idx);
+	void decrease(int idx);
+
 };
 
 #endif

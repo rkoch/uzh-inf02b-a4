@@ -18,8 +18,8 @@ int main(int argc, const char * argv[]) {
 	MyHeap<int, std::string> heap;
 	try {
 
-		//heap.removeMin();
-		//heap.minElement();
+//		heap.removeMin();
+//		heap.minElement();
 		heap.insertItem(1, "Cech");
 		std::cout << "Heap size after adding Cech: \n" << heap.size() << std::endl;
 

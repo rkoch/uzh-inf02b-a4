@@ -11,33 +11,34 @@
 
 #include "Heap.h"
 #include <iostream>
+#include <vector>
 
 // class constructs
 
 template<typename Key, typename Element>
 MyHeap<Key, Element>::MyHeap(int capac)
-		: capacity(capac), count(0) {
-	increaseStorage();
+		: capacity(capac), heap(1, NULL) {          // heap is now a vector, containing NULL at idx 0 - push_back() will insert at index 1
+	heap.reserve(capacity);                         // Reserve capacity items in vector
 }
 
 template<typename Key, typename Element>
 MyHeap<Key, Element>::~MyHeap() {
-	if (nodes != NULL) {
-		delete[] nodes;
-		nodes = NULL;
+	for (unsigned i = 0; i < heap.size(); i++) {
+		delete heap[i];
 	}
+	heap.clear();
 }
 
 // public methods
 
 template<typename Key, typename Element>
 int MyHeap<Key, Element>::size() const {
-	return count;
+	return heap.size() - 1;
 }
 
 template<typename Key, typename Element>
 bool MyHeap<Key, Element>::isEmpty() const {
-	return count <= 0;
+	return size() <= 0;
 }
 
 template<typename Key, typename Element>
@@ -46,7 +47,7 @@ const Element& MyHeap<Key, Element>::minElement() const throw (EmptyContainerExc
 		throw EmptyContainerException();
 	}
 
-	Node* n = nodes[1];          			 // Separate pointer for better debugging purposes
+	Node* n = heap[1];                              // Separate pointer for better debugging purposes
 	return n->second;
 }
 
@@ -56,29 +57,20 @@ const Key& MyHeap<Key, Element>::minKey() const throw (EmptyContainerException) 
 		throw EmptyContainerException();
 	}
 
-	Node* n = nodes[1];         			 // Separate pointer for better debugging purposes
+	Node* n = heap[1];                              // Separate pointer for better debugging purposes
 	return n->first;
 }
 
 template<typename Key, typename Element>
 void MyHeap<Key, Element>::insertItem(const Key& k, const Element& e) {
-	if (isStorageFull()) {
-		increaseStorage();
-	}
-
-	// Get first free index
-	int idx;
-	for (idx = 1; idx < capacity; idx++) {
-		if (nodes[idx] == NULL) {
-			break;
-		}
-	}
-
-	nodes[idx] = new Node(k, e);
-	count++;
+	heap.push_back(new Node(k, e));
 
 	// Re-balance heap
-	balanceHeap();
+	decrease(heap.size() - 1);
+
+#ifdef DEBUG
+	printHeap();
+#endif
 }
 
 template<typename Key, typename Element>
@@ -87,46 +79,96 @@ void MyHeap<Key, Element>::removeMin() throw (EmptyContainerException) {
 		throw EmptyContainerException();
 	}
 
-	Node* n = nodes[1];         			 // Separate pointer for better debugging purposes
-	nodes[1] = NULL;
+	Node* n = heap[1];                              // Separate pointer for better debugging purposes
 	delete n;
-	count--;
+	n = NULL;
+
+	heap[1] = heap.back();                          // Put tail of heap to root
+	heap.pop_back();                                // And remove it from there
 
 	// Re-balance heap
-	balanceHeap();
+	heapify(1);
+
+#ifdef DEBUG
+	printHeap();
+#endif
 }
 
 // private methods
 
 template<typename Key, typename Element>
 bool MyHeap<Key, Element>::isStorageFull() {
-	return (capacity - 1) <= count;          // -1 because first element can never be used
+	return heap.size() >= (unsigned) capacity;
 }
 
 template<typename Key, typename Element>
-void MyHeap<Key, Element>::increaseStorage() {
-	int oldCap = capacity;
-	NodePtr* oldNo = nodes;
-
-	if (oldNo != NULL) {
-		capacity *= 2;
+void MyHeap<Key, Element>::printHeap() {
+	std::cout << "Current heap contents: " << std::flush;
+	for (unsigned i = 1; i < heap.size(); i++) {
+		std::cout << "(" << heap[i]->first << ", " << heap[i]->second << ") ";
+		std::cout << std::flush;
 	}
+	std::cout << std::endl;
+}
 
-	nodes = new NodePtr[capacity];
+// helper methods
 
-	if (oldNo != NULL) {
-		// copy all to new and delete the old one
-		for (int i = 0; i < oldCap; i++) {
-			nodes[i] = oldNo[i];
+template<typename Key, typename Element>
+void MyHeap<Key, Element>::swap(int idx1, int idx2) {
+	heap[0] = heap[idx1];
+	heap[idx1] = heap[idx2];
+	heap[idx2] = heap[0];
+	heap[0] = NULL;
+}
+
+template<typename Key, typename Element>
+unsigned MyHeap<Key, Element>::parent(int childIdx) {
+	return (int) childIdx / 2;
+}
+
+template<typename Key, typename Element>
+unsigned MyHeap<Key, Element>::left(int parentIdx) {
+	return parentIdx * 2;
+}
+
+template<typename Key, typename Element>
+unsigned MyHeap<Key, Element>::right(int parentIdx) {
+	return (parentIdx * 2) + 1;
+}
+
+// heap balancing methods
+
+template<typename Key, typename Element>
+void MyHeap<Key, Element>::heapify(int idx) {
+	int i = idx;
+
+	while (true) {                                  // Create infinite loop to avoid recursive heapify
+		bool leftExists = heap.size() > left(i);
+		bool rightExists = heap.size() > right(i);
+		int swapIdx = i;
+
+		if (leftExists && (heap[left(i)]->first < heap[swapIdx]->first)) {
+			swapIdx = left(i);
 		}
-		// delete[] oldNo; -> No deletion because the Node (pair) pointers will be reused
-		oldNo = NULL;
+		if (rightExists && (heap[right(i)]->first < heap[swapIdx]->first) && heap[right(i)]->first < heap[left(i)]->first) {
+			swapIdx = right(i);
+		}
+		if (swapIdx == i) {
+			break;                                  // Nothing needs to be balanced
+		}
+
+		swap(i, swapIdx);
+		i = swapIdx;
 	}
 }
 
 template<typename Key, typename Element>
-void MyHeap<Key, Element>::balanceHeap() {
-	// TODO stuff
+void MyHeap<Key, Element>::decrease(int idx) {
+	int i = idx;
+	while ((i > 1) && (heap[i]->first < heap[parent(i)]->first)) {
+		swap(i, parent(i));
+		i = parent(i);
+	}
 }
 
 // Tell the compiler explicitly which type implementation of the generic MyHeap it should build.
