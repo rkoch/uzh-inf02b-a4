@@ -15,19 +15,16 @@
 #include "PriorityQueue.h"
 
 int main(int argc, const char * argv[]) {
-
-	/* INTRODUCTION:
-	 Check out the following links for further information on how to work with heap-functions on vectors:
-
-
-	 [1]  http://www.cplusplus.com/reference/algorithm/make_heap/
-	 [2]  http://www.cplusplus.com/reference/algorithm/push_heap/
-	 [3]  http://www.cplusplus.com/reference/algorithm/pop_heap/
-	 [4]  http://www.cplusplus.com/reference/algorithm/sort_heap/
-
-
-
-	 Implement your solution based on the instructions and infos you find on the given links!
+	/*
+	 * INTRODUCTION:
+	 * Check out the following links for further information on how to work with heap-functions on vectors:
+	 *
+	 * [1]  http://www.cplusplus.com/reference/algorithm/make_heap/
+	 * [2]  http://www.cplusplus.com/reference/algorithm/push_heap/
+	 * [3]  http://www.cplusplus.com/reference/algorithm/pop_heap/
+	 * [4]  http://www.cplusplus.com/reference/algorithm/sort_heap/
+	 *
+	 * Implement your solution based on the instructions and infos you find on the given links!
 	 */
 
 	//create priority queue
@@ -66,4 +63,3 @@ int main(int argc, const char * argv[]) {
 
 	return 0;
 }
-

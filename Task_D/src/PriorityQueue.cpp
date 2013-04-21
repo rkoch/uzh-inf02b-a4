@@ -11,13 +11,11 @@
  * Public repository at https://github.com/rkoch/uzh-inf02b-a4
  */
 
-#include <iostream>
 #include "PriorityQueue.h"
-
-//MISSING INCLUDE!! find the library to include...
-
+#include <iostream>
+#include <algorithm>
+#include <cmath>
 PriorityQueue::PriorityQueue() {
-
 	//create queue and fill it with starting elements
 	queue.push_back(99);
 	queue.push_back(3);
@@ -26,34 +24,32 @@ PriorityQueue::PriorityQueue() {
 	queue.push_back(13);
 
 	std::make_heap(queue.begin(), queue.end());          // build heap order on the queue, so that greatest element is on top
-
 }
 
 int PriorityQueue::getFrontElement() {          //return the topelement
-
 	return queue.at(0);
-
 }
 
 void PriorityQueue::insert(int _element) {
-
-	//TODO: insert code here
+	queue.push_back(_element);
+	std::push_heap(queue.begin(), queue.end());
 }
 
 void PriorityQueue::remove() {
-
-	//TODO: insert code here
+	std::pop_heap(queue.begin(), queue.end());
+	queue.pop_back();
 }
 
 void PriorityQueue::heapsort() {
-	//TODO: insert code here
+	std::sort_heap(queue.begin(), queue.end());
 }
 
 void PriorityQueue::printQueue() {
 	std::cout << "Current Queue: " << std::endl;
 
-	//TODO: insert code here
+	for (unsigned i = 0; i < queue.size(); i++) {
+		std::cout << queue[i] << ' ' << std::flush;
+	}
 
 	std::cout << std::endl;
 }
-

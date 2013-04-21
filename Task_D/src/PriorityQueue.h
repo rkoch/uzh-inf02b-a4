@@ -18,22 +18,19 @@
 
 class PriorityQueue {
 
-private:
-	std::vector<int> queue;
-
 public:
-
 	PriorityQueue();
 
 	int getFrontElement();
 
 	void insert(int _element);
-
 	void remove();
-
 	void heapsort();
 
 	void printQueue();
+
+private:
+	std::vector<int> queue;
 
 };
 
