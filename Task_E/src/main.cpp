@@ -49,11 +49,11 @@ int Sort::partition(int a[], int left, int right) {
 	int pivot = a[right];
 
 	while (i < j) {
-		// find element on the right, that is smaller than pivot
+		// find element on the left, that is bigger than pivot
 		while ((a[i] <= pivot) && (i < right)) {
 			i++;
 		}
-		// find element on the left, that is bigger than pivot
+		// find element on the right, that is smaller than pivot
 		while ((a[j] >= pivot) && (j > left)) {
 			j--;
 		}
